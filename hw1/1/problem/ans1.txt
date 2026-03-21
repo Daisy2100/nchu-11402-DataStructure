@@ -1,0 +1,9 @@
+queue
+impossible
+stack
+impossible
+impossible
+queue
+impossible
+queue
+stack
