@@ -2,6 +2,7 @@
 
 int main()
 {
+    // 把螢幕輸出的結果全部存進 ans1.txt 檔案裡，終端機不會印東西
     freopen("ans1.txt", "w", stdout);
     
     int t;
