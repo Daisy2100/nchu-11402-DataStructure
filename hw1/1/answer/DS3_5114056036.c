@@ -1,27 +1,20 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 int main(void) {
-    int n;
-    while (scanf("%d", &n) == 1 && n != 0) {
-        int *row_sums = (int *)calloc(n, sizeof(int));
-        int *col_sums = (int *)calloc(n, sizeof(int));
-        if (!row_sums || !col_sums) {
-            fprintf(stderr, "Memory allocation failed\n");
-            free(row_sums);
-            free(col_sums);
-            return 1;
-        }
+    freopen("ans3.txt", "w", stdout);
 
-        int i, j;
-        for (i = 0; i < n; i++) {
-            for (j = 0; j < n; j++) {
+    int n;
+    // 不斷讀取大小，遇到 0 結束
+    while (scanf("%d", &n) == 1 && n != 0) {
+        // 設定固定大小的陣列來計算每行(row)和每列(col)的總和，直接初始化為 0
+        int row_sums[100] = {0};
+        int col_sums[100] = {0};
+
+        // 一邊讀取矩陣資料，一邊累加進對應的行、列總和
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 int value;
-                if (scanf("%d", &value) != 1) {
-                    free(row_sums);
-                    free(col_sums);
-                    return 0;
-                }
+                scanf("%d", &value);
                 row_sums[i] += value;
                 col_sums[j] += value;
             }
@@ -30,7 +23,8 @@ int main(void) {
         int odd_rows = 0, odd_cols = 0;
         int odd_r_idx = -1, odd_c_idx = -1;
 
-        for (i = 0; i < n; i++) {
+        // 檢查有幾個奇數的行與列
+        for (int i = 0; i < n; i++) {
             if (row_sums[i] % 2 != 0) {
                 odd_rows++;
                 odd_r_idx = i;
@@ -41,16 +35,15 @@ int main(void) {
             }
         }
 
+        // 根據奇數行列的數量做最後裁決
         if (odd_rows == 0 && odd_cols == 0) {
-            puts("OK");
+            printf("OK\n");
         } else if (odd_rows == 1 && odd_cols == 1) {
+            // 注意題目通常要求座標由 1 開始，所以印出時 + 1
             printf("Change (%d,%d)\n", odd_r_idx + 1, odd_c_idx + 1);
         } else {
-            puts("Corrupt");
+            printf("Corrupt\n");
         }
-
-        free(row_sums);
-        free(col_sums);
     }
     return 0;
 }

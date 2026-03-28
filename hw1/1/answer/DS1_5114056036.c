@@ -1,75 +1,81 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-int main(void) {
+int main()
+{
+    freopen("ans1.txt", "w", stdout);
+    
     int t;
-    if (scanf("%d", &t) != 1) return 0;
+    // 1. 讀取總共有幾組實驗
+    if (scanf("%d", &t) != 1)
+        return 0;
 
-    while (t--) {
+    while (t--)
+    {
         int n;
-        if (scanf("%d", &n) != 1) return 0;
+        scanf("%d", &n);
 
-        int *que = (int *)malloc(sizeof(int) * (n + 1));
-        int *stk = (int *)malloc(sizeof(int) * (n + 1));
-        if (!que || !stk) {
-            fprintf(stderr, "Memory allocation failed\n");
-            free(que);
-            free(stk);
-            return 1;
-        }
+        // 準備兩個陣列當箱子，假設最多放 1000 個數字
+        int que[1000], stk[1000];
 
-        int ql = 0, qr = 0;
-        int stp = 0;
+        // 管理員指針
+        int head = 0, tail = 0; // Queue 用：頭跟尾
+        int top = 0;            // Stack 用：最上方的位置
+
+        // 偵探旗標：先假設兩個都成立 (1 是真, 0 是假)
         int is_q = 1;
         int is_s = 1;
 
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n; i++)
+        {
             int type, x;
-            if (scanf("%d", &type) != 1) {
-                free(que);
-                free(stk);
-                return 0;
+            scanf("%d %d", &type, &x);
+
+            if (type == 1)
+            {
+                // --- 動作 1：把數字 x 丟進去 ---
+                que[tail++] = x; // 排隊：排在最後面，尾巴往後移
+                stk[top++] = x;  // 疊盤：疊在最上面，高度往上升
             }
-            if (type == 1) {
-                if (scanf("%d", &x) != 1) {
-                    free(que);
-                    free(stk);
-                    return 0;
+            else if (type == 2)
+            {
+                // --- 動作 2：拿出來檢查，看是不是 x ---
+
+                // 檢查 Queue (應該拿最前面的人 head)
+                if (head >= tail || que[head] != x)
+                {
+                    is_q = 0; // 根本沒人排隊，或排頭不是 x，剔除！
                 }
-                que[qr++] = x;
-                stk[stp++] = x;
-            } else if (type == 2) {
-                if (scanf("%d", &x) != 1) {
-                    free(que);
-                    free(stk);
-                    return 0;
+                else
+                {
+                    head++; // 沒事，讓排頭離開，換下一個人
                 }
-                if (is_q) {
-                    if (ql >= qr || que[ql] != x) {
-                        is_q = 0;
-                    }
-                    if (ql < qr) ql++;
+
+                // 檢查 Stack (應該拿最上面的人 top-1)
+                if (top <= 0 || stk[top - 1] != x)
+                {
+                    is_s = 0; // 箱子空了，或最上面不是 x，剔除！
                 }
-                if (is_s) {
-                    if (stp <= 0 || stk[stp - 1] != x) {
-                        is_s = 0;
-                    }
-                    if (stp > 0) stp--;
+                else
+                {
+                    top--; // 沒事，把最上面的盤子拿走，高度下降
                 }
             }
         }
 
-        if (is_q && !is_s) {
-            puts("queue");
-        } else if (is_s && !is_q) {
-            puts("stack");
-        } else {
-            puts("impossible");
+        // --- 最後宣判 ---
+        if (is_q && !is_s)
+        {
+            printf("queue\n");
         }
-
-        free(que);
-        free(stk);
+        else if (is_s && !is_q)
+        {
+            printf("stack\n");
+        }
+        else
+        {
+            // 兩者都像、或者兩者都不像，通通印 impossible
+            printf("impossible\n");
+        }
     }
-
     return 0;
 }
