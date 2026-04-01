@@ -134,13 +134,6 @@ void solve() {
 }
 
 int main() {
-    /** 
-     * 檔案輸入輸出自動化
-     * 讀取 ../problem/testcase4.txt 並將結果存入 ans4.txt
-     */
-    freopen("../problem/testcase4.txt", "r", stdin);
-    freopen("ans4.txt", "w", stdout);
-
     int t;
     if (scanf("%d", &t) == 1) {
         while (t--) {
@@ -149,4 +142,3 @@ int main() {
     }
     return 0;
 }
-

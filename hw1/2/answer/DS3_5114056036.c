@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // HW2 第三題: Team Queue
 // 助教規定的結構
@@ -12,6 +13,9 @@ typedef struct Node {
 typedef struct Queue {
     Node *front, *rear;
 } Queue;
+
+// 全域變數，避免測資的 ID 太大把 Stack 撐爆，並支援到 100 萬的 ID
+int teamMap[1000000];
 
 // 初始化 Queue
 void initQueue(Queue *q) {
@@ -71,11 +75,11 @@ int dequeue(Queue *q) {
 int main() {
     freopen("ans3.txt", "w", stdout);
 
-    int t, caseNum = 1;
+    int t;
     while (scanf("%d", &t) == 1 && t != 0) {
-        printf("Scenario #%d\n", caseNum++);
-        // 假設最多 100000 個 ID，直接對應 Team (0~99999)
-        int teamMap[100000] = {0}; 
+        
+        // 預設所有人都不屬於任何隊伍 (-1)
+        memset(teamMap, -1, sizeof(teamMap));
         
         for (int i = 0; i < t; i++) {
             int numMembers;
@@ -83,7 +87,10 @@ int main() {
             for (int j = 0; j < numMembers; j++) {
                 int memberId;
                 scanf("%d", &memberId);
-                teamMap[memberId] = i;
+                // 確保讀到的 ID 不會超過我們宣告的陣列大小 (1,000,000)
+                if (memberId >= 0 && memberId < 1000000) {
+                    teamMap[memberId] = i;
+                }
             }
         }
 
@@ -95,14 +102,19 @@ int main() {
             if (cmd[0] == 'E') { // "ENQUEUE"
                 int x;
                 scanf("%d", &x);
-                enqueue(&q, x, teamMap[x]);
+                int teamId = (x >= 0 && x < 1000000) ? teamMap[x] : -1;
+                enqueue(&q, x, teamId);
             } else if (cmd[0] == 'D') { // "DEQUEUE"
                 printf("%d\n", dequeue(&q));
             }
         }
         printf("\n");
+        fflush(stdout); // 即時輸出到檔案
         
-        // 釋放記憶體...
+        // 釋放記憶體：把還在 Queue 裡面的清空，避免 Memory Leak
+        while (q.front != NULL) {
+            dequeue(&q);
+        }
     }
 
     return 0;
