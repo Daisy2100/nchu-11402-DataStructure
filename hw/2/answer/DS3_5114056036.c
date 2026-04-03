@@ -35,8 +35,18 @@ void enqueue(Queue *q, int val, int teamId) {
     }
 
     Node *curr = q->rear;
-    while (curr != NULL && curr->team != teamId) {
-        curr = curr->pre; // 從後面往前找同隊友
+    // 如果他有隊伍 (teamId != -1)，才需要往前找隊友；
+    // 如果是沒隊伍的邊緣人，直接讓他 curr = NULL，去最後面排隊
+    if (teamId != -1)
+    {
+        while (curr != NULL && curr->team != teamId)
+        {
+            curr = curr->pre; // 從後面往前找同隊友
+        }
+    }
+    else
+    {
+        curr = NULL;
     }
 
     if (curr != NULL) { // 找到隊友，插在他後面
