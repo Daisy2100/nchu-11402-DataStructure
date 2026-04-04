@@ -48,14 +48,17 @@ int main() {
 
     int num, den;
     
+    int t;
+    if (scanf("%d", &t) != 1) return 0;
+
     /*
      * 💡 測試執行小提醒 (如何跳出迴圈並產生結果)：
-     * 1. 若在終端機「手動貼上」測資：程式會因為 scanf == 2 一直等下一個輸入。
-     *    輸入完畢後，請按下「Ctrl + Z」再按「Enter」(這是在 Windows 送出 EOF 結束訊號)。
+     * 1. 若在終端機「手動貼上」測資：程式會因為需要 t 筆測資一直等待輸入。
+     *    輸入完畢後即可產生結果。
      * 2. 若要「瞬間測試」整份測資檔：請直接在終端機下此指令：
      *    ./DS2_5114056036.exe < ../problem/testcase2.txt
      */
-    while (scanf("%d %d", &num, &den) == 2) {
+    while (t-- > 0 && scanf("%d %d", &num, &den) == 2) {
         Stack resultStack;
         initStack(&resultStack);
 
